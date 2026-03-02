@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "425760447003",
+    "project_id": "millieand-milee-babysit-8mznj9",
+    "storage_bucket": "millieand-milee-babysit-8mznj9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425760447003:android:afa9ce54dbf7c5fcb9f6be",
+        "android_client_info": {
+          "package_name": "com.mandmbabysittingservice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425760447003-ci5vv7hoq20akrl2cvp9phuglh115vqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChfRkN5N3_enZ0Y76I0jQgXSURhrUG2us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425760447003-ci5vv7hoq20akrl2cvp9phuglh115vqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425760447003:android:8e4bcdedc23d3d1fb9f6be",
+        "android_client_info": {
+          "package_name": "com.servicesapp.booking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425760447003-vs0rjs6u5hm93fk39dejrc7o5v4emta9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.servicesapp.booking",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "425760447003-ci5vv7hoq20akrl2cvp9phuglh115vqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChfRkN5N3_enZ0Y76I0jQgXSURhrUG2us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425760447003-ci5vv7hoq20akrl2cvp9phuglh115vqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
