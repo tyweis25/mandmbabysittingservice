@@ -271,6 +271,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             ),
                                             FFButtonWidget(
                                               onPressed: () async {
+                                                FFAppState()
+                                                        .selectedBabysitter =
+                                                    BabySitterStruct(
+                                                  userid:
+                                                      'UAW34EubpMTccFPh9jXNRhGTo9V2',
+                                                  name: 'Amelia',
+                                                );
+                                                safeSetState(() {});
+
                                                 context.pushNamed(
                                                   AboutAmeliaWidget.routeName,
                                                   queryParameters: {

@@ -255,7 +255,7 @@ class _BookAppointmentWidgetState extends State<BookAppointmentWidget> {
                     Visibility(
                       visible: _model.showSelectAvail,
                       child: Text(
-                        'Amelia\'s Availibility for ${dateTimeFormat(
+                        '${FFAppState().selectedBabysitter.name}\'s Availibility for ${dateTimeFormat(
                           "yMd",
                           FFAppState().selectedDate,
                           locale: FFLocalizations.of(context).languageCode,
@@ -340,10 +340,6 @@ class _BookAppointmentWidgetState extends State<BookAppointmentWidget> {
                                           _model.bookingEndTimes,
                                           ParamType.String,
                                           isList: true,
-                                        ),
-                                        'bookingDate': serializeParam(
-                                          FFAppState().selectedDate,
-                                          ParamType.DateTime,
                                         ),
                                         'bookingStartTime': serializeParam(
                                           listSlotsItem.start,

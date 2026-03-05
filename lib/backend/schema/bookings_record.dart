@@ -61,11 +61,6 @@ class BookingsRecord extends FirestoreRecord {
   String get babysitterNotes => _babysitterNotes ?? '';
   bool hasBabysitterNotes() => _babysitterNotes != null;
 
-  // "address" field.
-  DocumentReference? _address;
-  DocumentReference? get address => _address;
-  bool hasAddress() => _address != null;
-
   // "modified_at" field.
   DateTime? _modifiedAt;
   DateTime? get modifiedAt => _modifiedAt;
@@ -76,25 +71,10 @@ class BookingsRecord extends FirestoreRecord {
   DateTime? get cancelledAt => _cancelledAt;
   bool hasCancelledAt() => _cancelledAt != null;
 
-  // "num_of_hours" field.
-  int? _numOfHours;
-  int get numOfHours => _numOfHours ?? 0;
-  bool hasNumOfHours() => _numOfHours != null;
-
   // "total_price" field.
   double? _totalPrice;
   double get totalPrice => _totalPrice ?? 0.0;
   bool hasTotalPrice() => _totalPrice != null;
-
-  // "parentRef" field.
-  DocumentReference? _parentRef;
-  DocumentReference? get parentRef => _parentRef;
-  bool hasParentRef() => _parentRef != null;
-
-  // "babysitterRef" field.
-  DocumentReference? _babysitterRef;
-  DocumentReference? get babysitterRef => _babysitterRef;
-  bool hasBabysitterRef() => _babysitterRef != null;
 
   // "children" field.
   List<String>? _children;
@@ -111,6 +91,26 @@ class BookingsRecord extends FirestoreRecord {
   String get typeOfService => _typeOfService ?? '';
   bool hasTypeOfService() => _typeOfService != null;
 
+  // "num_of_hours" field.
+  double? _numOfHours;
+  double get numOfHours => _numOfHours ?? 0.0;
+  bool hasNumOfHours() => _numOfHours != null;
+
+  // "babysitterId" field.
+  String? _babysitterId;
+  String get babysitterId => _babysitterId ?? '';
+  bool hasBabysitterId() => _babysitterId != null;
+
+  // "parentId" field.
+  String? _parentId;
+  String get parentId => _parentId ?? '';
+  bool hasParentId() => _parentId != null;
+
+  // "address" field.
+  DocumentReference? _address;
+  DocumentReference? get address => _address;
+  bool hasAddress() => _address != null;
+
   void _initializeFields() {
     _bookingId = snapshotData['booking_id'] as String?;
     _ratePerHour = castToType<double>(snapshotData['rate_per_hour']);
@@ -121,18 +121,18 @@ class BookingsRecord extends FirestoreRecord {
     _dateOfService = snapshotData['date_of_service'] as DateTime?;
     _parentNotes = snapshotData['parent_notes'] as String?;
     _babysitterNotes = snapshotData['babysitter_notes'] as String?;
-    _address = snapshotData['address'] as DocumentReference?;
     _modifiedAt = snapshotData['modified_at'] as DateTime?;
     _cancelledAt = snapshotData['cancelled_at'] as DateTime?;
-    _numOfHours = castToType<int>(snapshotData['num_of_hours']);
     _totalPrice = castToType<double>(snapshotData['total_price']);
-    _parentRef = snapshotData['parentRef'] as DocumentReference?;
-    _babysitterRef = snapshotData['babysitterRef'] as DocumentReference?;
     _children = getDataList(snapshotData['children']);
     _status = snapshotData['status'] is Status
         ? snapshotData['status']
         : deserializeEnum<Status>(snapshotData['status']);
     _typeOfService = snapshotData['type_of_service'] as String?;
+    _numOfHours = castToType<double>(snapshotData['num_of_hours']);
+    _babysitterId = snapshotData['babysitterId'] as String?;
+    _parentId = snapshotData['parentId'] as String?;
+    _address = snapshotData['address'] as DocumentReference?;
   }
 
   static CollectionReference get collection =>
@@ -179,15 +179,15 @@ Map<String, dynamic> createBookingsRecordData({
   DateTime? dateOfService,
   String? parentNotes,
   String? babysitterNotes,
-  DocumentReference? address,
   DateTime? modifiedAt,
   DateTime? cancelledAt,
-  int? numOfHours,
   double? totalPrice,
-  DocumentReference? parentRef,
-  DocumentReference? babysitterRef,
   Status? status,
   String? typeOfService,
+  double? numOfHours,
+  String? babysitterId,
+  String? parentId,
+  DocumentReference? address,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -200,15 +200,15 @@ Map<String, dynamic> createBookingsRecordData({
       'date_of_service': dateOfService,
       'parent_notes': parentNotes,
       'babysitter_notes': babysitterNotes,
-      'address': address,
       'modified_at': modifiedAt,
       'cancelled_at': cancelledAt,
-      'num_of_hours': numOfHours,
       'total_price': totalPrice,
-      'parentRef': parentRef,
-      'babysitterRef': babysitterRef,
       'status': status,
       'type_of_service': typeOfService,
+      'num_of_hours': numOfHours,
+      'babysitterId': babysitterId,
+      'parentId': parentId,
+      'address': address,
     }.withoutNulls,
   );
 
@@ -230,16 +230,16 @@ class BookingsRecordDocumentEquality implements Equality<BookingsRecord> {
         e1?.dateOfService == e2?.dateOfService &&
         e1?.parentNotes == e2?.parentNotes &&
         e1?.babysitterNotes == e2?.babysitterNotes &&
-        e1?.address == e2?.address &&
         e1?.modifiedAt == e2?.modifiedAt &&
         e1?.cancelledAt == e2?.cancelledAt &&
-        e1?.numOfHours == e2?.numOfHours &&
         e1?.totalPrice == e2?.totalPrice &&
-        e1?.parentRef == e2?.parentRef &&
-        e1?.babysitterRef == e2?.babysitterRef &&
         listEquality.equals(e1?.children, e2?.children) &&
         e1?.status == e2?.status &&
-        e1?.typeOfService == e2?.typeOfService;
+        e1?.typeOfService == e2?.typeOfService &&
+        e1?.numOfHours == e2?.numOfHours &&
+        e1?.babysitterId == e2?.babysitterId &&
+        e1?.parentId == e2?.parentId &&
+        e1?.address == e2?.address;
   }
 
   @override
@@ -253,16 +253,16 @@ class BookingsRecordDocumentEquality implements Equality<BookingsRecord> {
         e?.dateOfService,
         e?.parentNotes,
         e?.babysitterNotes,
-        e?.address,
         e?.modifiedAt,
         e?.cancelledAt,
-        e?.numOfHours,
         e?.totalPrice,
-        e?.parentRef,
-        e?.babysitterRef,
         e?.children,
         e?.status,
-        e?.typeOfService
+        e?.typeOfService,
+        e?.numOfHours,
+        e?.babysitterId,
+        e?.parentId,
+        e?.address
       ]);
 
   @override

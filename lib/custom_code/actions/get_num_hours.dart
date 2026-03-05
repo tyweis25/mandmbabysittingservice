@@ -10,11 +10,22 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-Future<int> getNumHours(
-  DateTime? selectedDate,
-  String? startTime,
-  String? endTime,
+Future<double> getNumHours(
+  String startTime,
+  String endTime,
 ) async {
-  return 4;
-  // Add your function code here!
+  DateTime startDt = DateFormat('h:mm a').parse(startTime);
+  DateTime endDt = DateFormat('h:mm a').parse(endTime);
+
+  double start = (startDt.hour).toDouble();
+  if (startDt.minute == 30) start += .5;
+
+  double end = (endDt.hour).toDouble();
+  if (endDt.minute == 30)
+    end += .5;
+  else if (endDt.hour == 0 && endDt.minute == 0) end = 24;
+
+  double totalHrs = end - start;
+
+  return totalHrs;
 }

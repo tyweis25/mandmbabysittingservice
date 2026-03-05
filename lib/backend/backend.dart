@@ -13,6 +13,7 @@ import 'schema/children_record.dart';
 import 'schema/addresses_record.dart';
 import 'schema/services_record.dart';
 import 'schema/availability_slots_record.dart';
+import 'schema/parent_addresses_record.dart';
 
 export 'dart:async' show StreamSubscription;
 export 'package:cloud_firestore/cloud_firestore.dart' hide Order;
@@ -29,6 +30,7 @@ export 'schema/children_record.dart';
 export 'schema/addresses_record.dart';
 export 'schema/services_record.dart';
 export 'schema/availability_slots_record.dart';
+export 'schema/parent_addresses_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
 Future<int> queryUsersRecordCount({
@@ -321,6 +323,46 @@ Future<List<AvailabilitySlotsRecord>> queryAvailabilitySlotsRecordOnce({
     queryCollectionOnce(
       AvailabilitySlotsRecord.collection,
       AvailabilitySlotsRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+/// Functions to query ParentAddressesRecords (as a Stream and as a Future).
+Future<int> queryParentAddressesRecordCount({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      ParentAddressesRecord.collection(parent),
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<ParentAddressesRecord>> queryParentAddressesRecord({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      ParentAddressesRecord.collection(parent),
+      ParentAddressesRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<ParentAddressesRecord>> queryParentAddressesRecordOnce({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      ParentAddressesRecord.collection(parent),
+      ParentAddressesRecord.fromSnapshot,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,

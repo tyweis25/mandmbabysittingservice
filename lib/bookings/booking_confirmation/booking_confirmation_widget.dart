@@ -23,14 +23,12 @@ class BookingConfirmationWidget extends StatefulWidget {
     super.key,
     required this.bookingStartTimes,
     required this.bookingEndTimes,
-    required this.bookingDate,
     required this.bookingStartTime,
     required this.bookingEndTime,
   });
 
   final List<String>? bookingStartTimes;
   final List<String>? bookingEndTimes;
-  final DateTime? bookingDate;
   final DateTime? bookingStartTime;
   final DateTime? bookingEndTime;
 
@@ -55,6 +53,8 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.endTimeList = widget.bookingEndTimes!.toList().cast<String>();
+      safeSetState(() {});
+      _model.totalNumHours = 1.0;
       safeSetState(() {});
       if (FFAppState().selectChildrenCheckbox.isNotEmpty) {
         _model.childrenCheckboxError = false;
@@ -262,68 +262,65 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                       alignment: AlignmentDirectional(0.0, 0.0),
                       child: Builder(
                         builder: (context) {
-                          if ((currentUserDocument?.addresses.toList() ?? [])
-                              .isNotEmpty) {
-                            return StreamBuilder<AddressesRecord>(
-                              stream: AddressesRecord.getDocument(
-                                  (currentUserDocument?.addresses.toList() ??
-                                          [])
-                                      .firstOrNull!),
-                              builder: (context, snapshot) {
-                                // Customize what your widget looks like when it's loading.
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                          FlutterFlowTheme.of(context).primary,
+                          if (FFAppState().isParentAddress) {
+                            return ListView(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      20.0, 0.0, 20.0, 0.0),
+                                  child: Text(
+                                    '${FFAppState().parentAddress.streetNumber} ${FFAppState().parentAddress.streetName}',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'SF Pro Display',
+                                          fontSize: 18.0,
+                                          letterSpacing: 0.0,
                                         ),
-                                      ),
-                                    ),
-                                  );
-                                }
-
-                                final listViewAddressesRecord = snapshot.data!;
-
-                                return ListView(
-                                  padding: EdgeInsets.zero,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      20.0, 0.0, 20.0, 0.0),
+                                  child: Text(
+                                    '${FFAppState().parentAddress.city}, ${FFAppState().parentAddress.state} ${FFAppState().parentAddress.zipcode}',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'SF Pro Display',
+                                          fontSize: 18.0,
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           20.0, 0.0, 20.0, 0.0),
                                       child: Text(
-                                        '${listViewAddressesRecord.streetNumber} ${listViewAddressesRecord.streetName}',
+                                        'Edit Address',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
                                               fontFamily: 'SF Pro Display',
-                                              fontSize: 18.0,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              fontSize: 20.0,
                                               letterSpacing: 0.0,
-                                            ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 0.0, 20.0, 0.0),
-                                      child: Text(
-                                        '${listViewAddressesRecord.city}, ${listViewAddressesRecord.state} ${listViewAddressesRecord.zipcode}',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'SF Pro Display',
-                                              fontSize: 18.0,
-                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                       ),
                                     ),
                                   ],
-                                );
-                              },
+                                ),
+                              ],
                             );
                           } else {
                             return Row(
@@ -440,6 +437,10 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                                       .toList()
                                       .cast<String>();
                                   safeSetState(() {});
+                                  safeSetState(() {
+                                    _model.endTimeValueController?.reset();
+                                    _model.endTimeValue = null;
+                                  });
 
                                   safeSetState(() {});
                                 },
@@ -478,13 +479,27 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                             Expanded(
                               child: FlutterFlowDropDown<String>(
                                 controller: _model.endTimeValueController ??=
-                                    FormFieldController<String>(
-                                  _model.endTimeValue ??=
-                                      _model.endTimeList.elementAtOrNull(0),
-                                ),
+                                    FormFieldController<String>(null),
                                 options: _model.endTimeList,
-                                onChanged: (val) => safeSetState(
-                                    () => _model.endTimeValue = val),
+                                onChanged: (val) async {
+                                  safeSetState(() => _model.endTimeValue = val);
+                                  _model.outpuHrs = await actions.getNumHours(
+                                    _model.startTimeValue!,
+                                    _model.endTimeValue!,
+                                  );
+                                  _model.totalNumHours = _model.outpuHrs;
+                                  safeSetState(() {});
+                                  _model.outputTotal =
+                                      await actions.getTotalPrice(
+                                    _model.totalNumHours!,
+                                    _model.totalNumChildren!,
+                                    FFAppState().ratePerHour.toDouble(),
+                                  );
+                                  _model.totalBookingPrice = _model.outputTotal;
+                                  safeSetState(() {});
+
+                                  safeSetState(() {});
+                                },
                                 width: 186.0,
                                 height: 50.0,
                                 textStyle: FlutterFlowTheme.of(context)
@@ -558,6 +573,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                               child: wrapWithModel(
                                 model: _model.childCheckboxListComponentModel,
                                 updateCallback: () => safeSetState(() {}),
+                                updateOnChange: true,
                                 child: ChildCheckboxListComponentWidget(
                                   childList:
                                       FFAppState().selectChildrenCheckbox,
@@ -768,10 +784,10 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                     Align(
                       alignment: AlignmentDirectional(-1.0, 0.0),
                       child: Text(
-                        '3',
+                        _model.totalNumHours.toString(),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -784,7 +800,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         '(hrs)',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -810,7 +826,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         'x',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -836,7 +852,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         '\$',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -846,10 +862,10 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                     Align(
                       alignment: AlignmentDirectional(-1.0, 0.0),
                       child: Text(
-                        '10',
+                        FFAppState().ratePerHour.toString(),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -862,7 +878,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         '/hr',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -875,7 +891,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         '  ',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 17.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -888,7 +904,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         '=',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -901,7 +917,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         '  ',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 17.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -914,7 +930,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         '\$',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -924,10 +940,10 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                     Align(
                       alignment: AlignmentDirectional(-1.0, 0.0),
                       child: Text(
-                        '30',
+                        _model.totalBookingPrice.toString(),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
-                              fontSize: 20.0,
+                              fontSize: 15.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.normal,
                               lineHeight: 1.5,
@@ -950,14 +966,19 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                           .toList(),
                     );
                     _model.numHours = await actions.getNumHours(
-                      FFAppState().selectedDate,
-                      _model.startTimeValue,
-                      _model.endTimeValue,
+                      _model.startTimeValue!,
+                      _model.endTimeValue!,
                     );
                     _model.totalPrice = await actions.getTotalPrice(
-                      _model.numHours!,
+                      _model.totalNumHours!,
                       _model.numChildren!,
-                      10.0,
+                      FFAppState().ratePerHour.toDouble(),
+                    );
+                    _model.startDt = await actions.getStartTime(
+                      _model.startTimeValue!,
+                    );
+                    _model.endDt = await actions.getEndTime(
+                      _model.endTimeValue!,
                     );
 
                     var bookingsRecordReference =
@@ -965,22 +986,23 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                     await bookingsRecordReference.set({
                       ...createBookingsRecordData(
                         bookingId: _model.bookingId,
-                        ratePerHour: 10.0,
+                        ratePerHour: FFAppState().ratePerHour.toDouble(),
                         numOfChildren: _model.numChildren,
-                        startTime: getCurrentTimestamp,
-                        endTime: getCurrentTimestamp,
+                        startTime: _model.startDt,
+                        endTime: _model.endDt,
                         createdTime: getCurrentTimestamp,
                         dateOfService: FFAppState().selectedDate,
                         parentNotes: _model.parentNotesTextController.text,
                         address:
                             (currentUserDocument?.addresses.toList() ?? [])
                                 .firstOrNull,
-                        numOfHours: _model.numHours,
                         totalPrice: _model.totalPrice,
-                        parentRef: currentUserReference,
-                        babysitterRef: _model.bookingRef?.babysitterRef,
                         status: Status.Pending,
                         typeOfService: 'Babysitting Service with Amelia',
+                        parentId: currentUserUid,
+                        babysitterNotes: _model.parentNotesTextController.text,
+                        numOfHours: _model.numHours,
+                        babysitterId: 'UAW34EubpMTccFPh9jXNRhGTo9V2',
                       ),
                       ...mapToFirestore(
                         {
@@ -992,22 +1014,23 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                     _model.bookingRef = BookingsRecord.getDocumentFromData({
                       ...createBookingsRecordData(
                         bookingId: _model.bookingId,
-                        ratePerHour: 10.0,
+                        ratePerHour: FFAppState().ratePerHour.toDouble(),
                         numOfChildren: _model.numChildren,
-                        startTime: getCurrentTimestamp,
-                        endTime: getCurrentTimestamp,
+                        startTime: _model.startDt,
+                        endTime: _model.endDt,
                         createdTime: getCurrentTimestamp,
                         dateOfService: FFAppState().selectedDate,
                         parentNotes: _model.parentNotesTextController.text,
                         address:
                             (currentUserDocument?.addresses.toList() ?? [])
                                 .firstOrNull,
-                        numOfHours: _model.numHours,
                         totalPrice: _model.totalPrice,
-                        parentRef: currentUserReference,
-                        babysitterRef: _model.bookingRef?.babysitterRef,
                         status: Status.Pending,
                         typeOfService: 'Babysitting Service with Amelia',
+                        parentId: currentUserUid,
+                        babysitterNotes: _model.parentNotesTextController.text,
+                        numOfHours: _model.numHours,
+                        babysitterId: 'UAW34EubpMTccFPh9jXNRhGTo9V2',
                       ),
                       ...mapToFirestore(
                         {

@@ -526,6 +526,38 @@ class FFAppState extends ChangeNotifier {
   void insertAtIndexInChildLikes(int index, String value) {
     childLikes.insert(index, value);
   }
+
+  BabySitterStruct _selectedBabysitter = BabySitterStruct();
+  BabySitterStruct get selectedBabysitter => _selectedBabysitter;
+  set selectedBabysitter(BabySitterStruct value) {
+    _selectedBabysitter = value;
+  }
+
+  void updateSelectedBabysitterStruct(Function(BabySitterStruct) updateFn) {
+    updateFn(_selectedBabysitter);
+  }
+
+  int _ratePerHour = 10;
+  int get ratePerHour => _ratePerHour;
+  set ratePerHour(int value) {
+    _ratePerHour = value;
+  }
+
+  bool _isParentAddress = false;
+  bool get isParentAddress => _isParentAddress;
+  set isParentAddress(bool value) {
+    _isParentAddress = value;
+  }
+
+  ParentAddressesStruct _parentAddress = ParentAddressesStruct();
+  ParentAddressesStruct get parentAddress => _parentAddress;
+  set parentAddress(ParentAddressesStruct value) {
+    _parentAddress = value;
+  }
+
+  void updateParentAddressStruct(Function(ParentAddressesStruct) updateFn) {
+    updateFn(_parentAddress);
+  }
 }
 
 void _safeInit(Function() initializeField) {

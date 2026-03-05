@@ -10,11 +10,9 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-Future<double> getTotalPrice(
-  double numHours,
-  int numChildren,
-  double ratePerHour,
-) async {
-  return ((numHours.ceilToDouble()) * numChildren * ratePerHour);
-  // Add your function code here!
+Future<bool> isEndTimeSelected(String? selectedEndTimeStr) async {
+  if (selectedEndTimeStr != null && selectedEndTimeStr.isNotEmpty)
+    return true;
+  else
+    return false;
 }

@@ -27,6 +27,8 @@ Future<List<String>> getEndTimes(
 
   startIndex += 1.0;
 
+  if (endTime.hour == 0 && endTime.minute == 0) endIndex = 23.5;
+
   for (double i = startIndex; i <= endIndex; i += 0.5) {
     DateTime tempTime = DateTime(0, 0, 0, 0, 0);
 
@@ -37,6 +39,9 @@ Future<List<String>> getEndTimes(
 
     timeList.add(DateFormat('h:mm a').format(tempTime));
   }
+
+  if (endTime.hour == 0 && endTime.minute == 0)
+    timeList.add(DateFormat('h:mm a').format(DateTime(0, 0, 0, 0, 0)));
 
   return timeList;
 }

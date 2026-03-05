@@ -52,31 +52,32 @@ Future<List<AvailableTimeslotsDataStruct>> getAvailableSlots() async {
             startDate.hour + 1, 0);
     }
 
-    double startMinutes = (startDate.minute).toDouble() / 60;
-    double endMinutes = (endDate.minute).toDouble() / 60;
-
-    double startHourMinutes = (startDate.hour).toDouble() + startMinutes;
-    double endHourMinutes = (endDate.hour).toDouble() + endMinutes;
-
     availableSlot.start = startDate;
+
+    if (endDate.hour == 23 && endDate.minute == 59)
+      endDate = DateTime(0, 0, 0, 0, 0);
     availableSlot.end = endDate;
-    availableSlots.add(availableSlot);
 
-/*
-    DateTime startFormat =
-        DateTime(startDate.year, startDate.month, startDate.day);
-    DateTime endFormat = DateTime(endDate.year, endDate.month, endDate.day);
-    DateTime? selectedDate = FFAppState().selectedDate;
-    DateTime selectedDateFormat = DateTime(selectedDate?.year ?? 0,
-        selectedDate?.month ?? 0, selectedDate?.day ?? 0);
+    double endOffset = 0.0;
+    double startOffset = 0.0;
 
-    if (startFormat == selectedDateFormat) {
-      availableSlot.start = startDate;
-      if (endFormat != selectedDateFormat)
-        availableSlot.end =
-            DateTime(endDate.year, endDate.month, endDate.day, 23, 59);
-      else
-        availableSlot.end = endDate;*/
+    if (startDate.minute == 30)
+      startOffset = (startDate.hour).toDouble() + .5;
+    else
+      startOffset = (startDate.hour).toDouble();
+
+    if (endDate.minute == 30)
+      endOffset = (endDate.hour).toDouble() + .5;
+    else
+      endOffset = (endDate.hour).toDouble();
+
+    if (endDate.hour == 0 && endDate.minute == 0) {
+      endOffset = 24;
+    }
+
+    double timeDiff = endOffset - startOffset;
+
+    if (timeDiff >= 1.0) availableSlots.add(availableSlot);
   }
   return availableSlots;
 }

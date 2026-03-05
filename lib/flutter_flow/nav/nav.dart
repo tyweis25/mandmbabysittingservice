@@ -318,10 +318,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               ParamType.String,
               isList: true,
             ),
-            bookingDate: params.getParam(
-              'bookingDate',
-              ParamType.DateTime,
-            ),
             bookingStartTime: params.getParam(
               'bookingStartTime',
               ParamType.DateTime,

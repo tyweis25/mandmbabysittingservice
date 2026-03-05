@@ -29,8 +29,6 @@ class AddAddressModel extends FlutterFlowModel<AddAddressWidget> {
   FocusNode? zipcodeFocusNode;
   TextEditingController? zipcodeTextController;
   String? Function(BuildContext, String?)? zipcodeTextControllerValidator;
-  // Stores action output result for [Backend Call - Create Document] action in AddAddress widget.
-  AddressesRecord? addrDocRef;
 
   @override
   void initState(BuildContext context) {}
