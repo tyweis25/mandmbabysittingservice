@@ -558,6 +558,41 @@ class FFAppState extends ChangeNotifier {
   void updateParentAddressStruct(Function(ParentAddressesStruct) updateFn) {
     updateFn(_parentAddress);
   }
+
+  bool _hasChildren = false;
+  bool get hasChildren => _hasChildren;
+  set hasChildren(bool value) {
+    _hasChildren = value;
+  }
+
+  List<ChildrenStruct> _children = [];
+  List<ChildrenStruct> get children => _children;
+  set children(List<ChildrenStruct> value) {
+    _children = value;
+  }
+
+  void addToChildren(ChildrenStruct value) {
+    children.add(value);
+  }
+
+  void removeFromChildren(ChildrenStruct value) {
+    children.remove(value);
+  }
+
+  void removeAtIndexFromChildren(int index) {
+    children.removeAt(index);
+  }
+
+  void updateChildrenAtIndex(
+    int index,
+    ChildrenStruct Function(ChildrenStruct) updateFn,
+  ) {
+    children[index] = updateFn(_children[index]);
+  }
+
+  void insertAtIndexInChildren(int index, ChildrenStruct value) {
+    children.insert(index, value);
+  }
 }
 
 void _safeInit(Function() initializeField) {

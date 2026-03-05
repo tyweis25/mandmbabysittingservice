@@ -413,45 +413,10 @@ class _AddChildWidgetState extends State<AddChildWidget> {
                                 return;
                               }
 
-                              var childrenRecordReference =
-                                  ChildrenRecord.collection.doc();
-                              await childrenRecordReference.set({
-                                ...createChildrenRecordData(
-                                  childName:
-                                      _model.childNameTextController.text,
-                                  childAge: _model.ageValue,
-                                  childNotes:
-                                      _model.childNotesTextController.text,
-                                  parent: currentUserReference,
-                                ),
-                                ...mapToFirestore(
-                                  {
-                                    'child_likes': _model.checkboxGroupValues,
-                                  },
-                                ),
-                              });
-                              _model.childDocRef =
-                                  ChildrenRecord.getDocumentFromData({
-                                ...createChildrenRecordData(
-                                  childName:
-                                      _model.childNameTextController.text,
-                                  childAge: _model.ageValue,
-                                  childNotes:
-                                      _model.childNotesTextController.text,
-                                  parent: currentUserReference,
-                                ),
-                                ...mapToFirestore(
-                                  {
-                                    'child_likes': _model.checkboxGroupValues,
-                                  },
-                                ),
-                              }, childrenRecordReference);
-
                               await currentUserReference!.update({
                                 ...mapToFirestore(
                                   {
-                                    'children': FieldValue.arrayUnion(
-                                        [_model.childDocRef?.reference]),
+                                    'children': FieldValue.arrayUnion([]),
                                   },
                                 ),
                               });

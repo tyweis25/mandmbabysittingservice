@@ -18,51 +18,44 @@ Future loadParentAddress() async {
   try {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
+      FFAppState().update(() => FFAppState().isParentAddress = false);
       return;
     }
 
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
+    final userRef =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    final querySnapshot =
+        await ParentAddressesRecord.collection(userRef).limit(1).get();
 
-    if (!userDoc.exists) {
+    if (querySnapshot.docs.isEmpty) {
+      FFAppState().update(() => FFAppState().isParentAddress = false);
       return;
     }
 
-    final data = userDoc.data();
-    if (data == null) {
+    final doc = querySnapshot.docs.first;
+    final data = doc.data();
+    if (data == null || data.isEmpty) {
+      FFAppState().update(() => FFAppState().isParentAddress = false);
       return;
     }
 
-    final addressData = data['parentAddress'];
-    if (addressData == null) {
-      FFAppState().isParentAddress = false;
-      return;
-    }
+    // create_parent_address writes snake_case (street_number, street_name);
+    // ParentAddressesRecord expects camelCase. Support both.
+    final parentAddress = ParentAddressesStruct(
+      streetNumber: (data['streetNumber'] ?? data['street_number'])?.toString(),
+      streetName: (data['streetName'] ?? data['street_name'])?.toString(),
+      city: data['city']?.toString(),
+      state: data['state']?.toString(),
+      zipcode: data['zipcode']?.toString(),
+      parentRef: userRef,
+    );
 
-    if (addressData is Map<String, dynamic>) {
-      final parentAddress = ParentAddressesStruct(
-        streetNumber: addressData['streetNumber']?.toString() ?? '',
-        streetName: addressData['streetName']?.toString() ?? '',
-        city: addressData['city']?.toString() ?? '',
-        state: addressData['state']?.toString() ?? '',
-        zipcode: addressData['zipCode']?.toString() ?? '',
-      );
-
-      FFAppState().update(() {
-        FFAppState().parentAddress = parentAddress;
-        FFAppState().isParentAddress = true;
-      });
-    } else {
-      FFAppState().update(() {
-        FFAppState().isParentAddress = false;
-      });
-    }
+    FFAppState().update(() {
+      FFAppState().parentAddress = parentAddress;
+      FFAppState().isParentAddress = true;
+    });
   } catch (e) {
     debugPrint('Error loading parent address: $e');
-    FFAppState().update(() {
-      FFAppState().isParentAddress = false;
-    });
+    FFAppState().update(() => FFAppState().isParentAddress = false);
   }
 }

@@ -1,4 +1,3 @@
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'add_child_widget.dart' show AddChildWidget;
@@ -40,8 +39,6 @@ class AddChildModel extends FlutterFlowModel<AddChildWidget> {
   FocusNode? childNotesFocusNode;
   TextEditingController? childNotesTextController;
   String? Function(BuildContext, String?)? childNotesTextControllerValidator;
-  // Stores action output result for [Backend Call - Create Document] action in AddChildBtn widget.
-  ChildrenRecord? childDocRef;
 
   @override
   void initState(BuildContext context) {

@@ -40,6 +40,8 @@ class ChildrenRecord extends FirestoreRecord {
   DocumentReference? get parent => _parent;
   bool hasParent() => _parent != null;
 
+  DocumentReference get parentReference => reference.parent.parent!;
+
   void _initializeFields() {
     _childName = snapshotData['child_name'] as String?;
     _childAge = snapshotData['child_age'] as String?;
@@ -48,8 +50,13 @@ class ChildrenRecord extends FirestoreRecord {
     _parent = snapshotData['parent'] as DocumentReference?;
   }
 
-  static CollectionReference get collection =>
-      FirebaseFirestore.instance.collection('children');
+  static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
+      parent != null
+          ? parent.collection('children')
+          : FirebaseFirestore.instance.collectionGroup('children');
+
+  static DocumentReference createDoc(DocumentReference parent, {String? id}) =>
+      parent.collection('children').doc(id);
 
   static Stream<ChildrenRecord> getDocument(DocumentReference ref) =>
       ref.snapshots().map((s) => ChildrenRecord.fromSnapshot(s));

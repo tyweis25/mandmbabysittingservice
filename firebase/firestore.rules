@@ -29,13 +29,6 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /children/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if false;
-      allow delete: if false;
-    }
-
     match /addresses/{document} {
       allow create: if true;
       allow read: if true;
@@ -63,5 +56,17 @@ service cloud.firestore {
       allow write: if request.auth.uid == parent;
       allow delete: if request.auth.uid == parent;
     }
+
+    match /users/{parent}/children/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if true;
+      allow delete: if true;
+    }
+
+    match /{path=**}/children/{document} {
+      allow read: if true;
+    }
+
   }
 }

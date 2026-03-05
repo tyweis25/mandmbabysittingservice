@@ -9,11 +9,11 @@ import 'schema/users_record.dart';
 import 'schema/notifications_record.dart';
 import 'schema/chat_record.dart';
 import 'schema/bookings_record.dart';
-import 'schema/children_record.dart';
 import 'schema/addresses_record.dart';
 import 'schema/services_record.dart';
 import 'schema/availability_slots_record.dart';
 import 'schema/parent_addresses_record.dart';
+import 'schema/children_record.dart';
 
 export 'dart:async' show StreamSubscription;
 export 'package:cloud_firestore/cloud_firestore.dart' hide Order;
@@ -26,11 +26,11 @@ export 'schema/users_record.dart';
 export 'schema/notifications_record.dart';
 export 'schema/chat_record.dart';
 export 'schema/bookings_record.dart';
-export 'schema/children_record.dart';
 export 'schema/addresses_record.dart';
 export 'schema/services_record.dart';
 export 'schema/availability_slots_record.dart';
 export 'schema/parent_addresses_record.dart';
+export 'schema/children_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
 Future<int> queryUsersRecordCount({
@@ -175,43 +175,6 @@ Future<List<BookingsRecord>> queryBookingsRecordOnce({
     queryCollectionOnce(
       BookingsRecord.collection,
       BookingsRecord.fromSnapshot,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-/// Functions to query ChildrenRecords (as a Stream and as a Future).
-Future<int> queryChildrenRecordCount({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-}) =>
-    queryCollectionCount(
-      ChildrenRecord.collection,
-      queryBuilder: queryBuilder,
-      limit: limit,
-    );
-
-Stream<List<ChildrenRecord>> queryChildrenRecord({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollection(
-      ChildrenRecord.collection,
-      ChildrenRecord.fromSnapshot,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-Future<List<ChildrenRecord>> queryChildrenRecordOnce({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollectionOnce(
-      ChildrenRecord.collection,
-      ChildrenRecord.fromSnapshot,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
@@ -363,6 +326,46 @@ Future<List<ParentAddressesRecord>> queryParentAddressesRecordOnce({
     queryCollectionOnce(
       ParentAddressesRecord.collection(parent),
       ParentAddressesRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+/// Functions to query ChildrenRecords (as a Stream and as a Future).
+Future<int> queryChildrenRecordCount({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      ChildrenRecord.collection(parent),
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<ChildrenRecord>> queryChildrenRecord({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      ChildrenRecord.collection(parent),
+      ChildrenRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<ChildrenRecord>> queryChildrenRecordOnce({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      ChildrenRecord.collection(parent),
+      ChildrenRecord.fromSnapshot,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
