@@ -11,5 +11,52 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 Future loadChildren() async {
-  // Add your function code here!
+  try {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      FFAppState().update(() {
+        FFAppState().children = [];
+        FFAppState().hasChildren = false;
+      });
+      return;
+    }
+
+    final userRef =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    final querySnapshot = await userRef.collection('children').get();
+
+    final list = <ChildrenStruct>[];
+    for (final doc in querySnapshot.docs) {
+      final data = doc.data();
+      if (data.isEmpty) continue;
+      // Support snake_case (Firestore) and camelCase
+      final childName =
+          (data['childName'] ?? data['child_name'])?.toString() ?? '';
+      final childAge =
+          (data['childAge'] ?? data['child_age'])?.toString() ?? '';
+      final childNotes =
+          (data['childNotes'] ?? data['child_notes'])?.toString() ?? '';
+      final rawLikes = data['childLikes'] ?? data['child_likes'];
+      final childLikes = rawLikes is List
+          ? rawLikes.map((e) => e?.toString() ?? '').toList()
+          : <String>[];
+      list.add(ChildrenStruct(
+        childName: childName,
+        childAge: childAge,
+        childNotes: childNotes,
+        childLikes: childLikes,
+      ));
+    }
+
+    FFAppState().update(() {
+      FFAppState().children = list;
+      FFAppState().hasChildren = list.isNotEmpty;
+    });
+  } catch (e) {
+    debugPrint('Error loading children: $e');
+    FFAppState().update(() {
+      FFAppState().children = [];
+      FFAppState().hasChildren = false;
+    });
+  }
 }
