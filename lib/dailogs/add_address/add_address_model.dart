@@ -1,4 +1,3 @@
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'add_address_widget.dart' show AddAddressWidget;
@@ -12,8 +11,6 @@ class AddAddressModel extends FlutterFlowModel<AddAddressWidget> {
   FocusNode? streetNumberFocusNode;
   TextEditingController? streetNumberTextController;
   String? Function(BuildContext, String?)? streetNumberTextControllerValidator;
-  // Stores action output result for [Backend Call - Create Document] action in StreetNumber widget.
-  AddressesRecord? addrDocId;
   // State field(s) for StreetName widget.
   FocusNode? streetNameFocusNode;
   TextEditingController? streetNameTextController;

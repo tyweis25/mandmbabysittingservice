@@ -1,11 +1,10 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_checkbox_group.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -242,10 +241,9 @@ class _AddChildWidgetState extends State<AddChildWidget> {
                               FlutterFlowCheckboxGroup(
                                 options: FFAppState().childLikes.toList(),
                                 onChanged: (val) => safeSetState(
-                                    () => _model.checkboxGroupValues = val),
-                                controller:
-                                    _model.checkboxGroupValueController ??=
-                                        FormFieldController<List<String>>(
+                                    () => _model.childLikesValues = val),
+                                controller: _model.childLikesValueController ??=
+                                    FormFieldController<List<String>>(
                                   [],
                                 ),
                                 activeColor:
@@ -261,7 +259,7 @@ class _AddChildWidgetState extends State<AddChildWidget> {
                                     ),
                                 checkboxBorderRadius:
                                     BorderRadius.circular(4.0),
-                                initialized: _model.checkboxGroupValues != null,
+                                initialized: _model.childLikesValues != null,
                               ),
                             ],
                           ),
@@ -412,23 +410,13 @@ class _AddChildWidgetState extends State<AddChildWidget> {
                               if (_model.ageValue == null) {
                                 return;
                               }
-
-                              await currentUserReference!.update({
-                                ...mapToFirestore(
-                                  {
-                                    'children': FieldValue.arrayUnion([]),
-                                  },
-                                ),
-                              });
-                              FFAppState().addToSelectChildrenCheckbox(
-                                  _model.childNameTextController.text);
-                              safeSetState(() {});
-                              await widget.onAddChild?.call(
-                                false,
+                              await actions.createChild(
+                                _model.childNameTextController.text,
+                                _model.ageValue!,
+                                _model.childNotesTextController.text,
+                                _model.childLikesValues?.toList(),
                               );
                               Navigator.pop(context);
-
-                              safeSetState(() {});
                             },
                             text: 'Add Child',
                             options: FFButtonOptions(

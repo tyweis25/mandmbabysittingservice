@@ -566,7 +566,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                       autovalidateMode: AutovalidateMode.disabled,
                       child: Builder(
                         builder: (context) {
-                          if (!_model.childrenCheckboxError) {
+                          if (FFAppState().hasChildren) {
                             return Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   20.0, 0.0, 0.0, 0.0),
@@ -575,8 +575,7 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                                 updateCallback: () => safeSetState(() {}),
                                 updateOnChange: true,
                                 child: ChildCheckboxListComponentWidget(
-                                  childList:
-                                      FFAppState().selectChildrenCheckbox,
+                                  childList: FFAppState().children,
                                   onSelectChild: () async {},
                                 ),
                               ),
@@ -993,9 +992,6 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         createdTime: getCurrentTimestamp,
                         dateOfService: FFAppState().selectedDate,
                         parentNotes: _model.parentNotesTextController.text,
-                        address:
-                            (currentUserDocument?.addresses.toList() ?? [])
-                                .firstOrNull,
                         totalPrice: _model.totalPrice,
                         status: Status.Pending,
                         typeOfService: 'Babysitting Service with Amelia',
@@ -1021,9 +1017,6 @@ class _BookingConfirmationWidgetState extends State<BookingConfirmationWidget> {
                         createdTime: getCurrentTimestamp,
                         dateOfService: FFAppState().selectedDate,
                         parentNotes: _model.parentNotesTextController.text,
-                        address:
-                            (currentUserDocument?.addresses.toList() ?? [])
-                                .firstOrNull,
                         totalPrice: _model.totalPrice,
                         status: Status.Pending,
                         typeOfService: 'Babysitting Service with Amelia',

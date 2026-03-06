@@ -1,3 +1,4 @@
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_checkbox_group.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -14,7 +15,7 @@ class ChildCheckboxListComponentWidget extends StatefulWidget {
     required this.onSelectChild,
   });
 
-  final List<String>? childList;
+  final List<ChildrenStruct>? childList;
   final Future Function()? onSelectChild;
 
   @override
@@ -52,12 +53,12 @@ class _ChildCheckboxListComponentWidgetState
     context.watch<FFAppState>();
 
     return FlutterFlowCheckboxGroup(
-      options: widget.childList!.toList(),
+      options: FFAppState().children.map((e) => e.childName).toList(),
       onChanged: (val) =>
           safeSetState(() => _model.childCheckboxListComponentValues = val),
       controller: _model.childCheckboxListComponentValueController ??=
           FormFieldController<List<String>>(
-        List.from([FFAppState().selectChildrenCheckbox.firstOrNull!] ?? []),
+        List.from([''] ?? []),
       ),
       activeColor: FlutterFlowTheme.of(context).primary,
       checkColor: FlutterFlowTheme.of(context).info,

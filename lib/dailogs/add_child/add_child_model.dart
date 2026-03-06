@@ -29,11 +29,10 @@ class AddChildModel extends FlutterFlowModel<AddChildWidget> {
   // State field(s) for Age widget.
   String? ageValue;
   FormFieldController<String>? ageValueController;
-  // State field(s) for CheckboxGroup widget.
-  FormFieldController<List<String>>? checkboxGroupValueController;
-  List<String>? get checkboxGroupValues => checkboxGroupValueController?.value;
-  set checkboxGroupValues(List<String>? v) =>
-      checkboxGroupValueController?.value = v;
+  // State field(s) for ChildLikes widget.
+  FormFieldController<List<String>>? childLikesValueController;
+  List<String>? get childLikesValues => childLikesValueController?.value;
+  set childLikesValues(List<String>? v) => childLikesValueController?.value = v;
 
   // State field(s) for ChildNotes widget.
   FocusNode? childNotesFocusNode;

@@ -65,16 +65,6 @@ class UsersRecord extends FirestoreRecord {
   bool get isAdmin => _isAdmin ?? false;
   bool hasIsAdmin() => _isAdmin != null;
 
-  // "children" field.
-  List<DocumentReference>? _children;
-  List<DocumentReference> get children => _children ?? const [];
-  bool hasChildren() => _children != null;
-
-  // "addresses" field.
-  List<DocumentReference>? _addresses;
-  List<DocumentReference> get addresses => _addresses ?? const [];
-  bool hasAddresses() => _addresses != null;
-
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -86,8 +76,6 @@ class UsersRecord extends FirestoreRecord {
     _lastName = snapshotData['lastName'] as String?;
     _isActive = snapshotData['isActive'] as bool?;
     _isAdmin = snapshotData['isAdmin'] as bool?;
-    _children = getDataList(snapshotData['children']);
-    _addresses = getDataList(snapshotData['addresses']);
   }
 
   static CollectionReference get collection =>
@@ -158,7 +146,6 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
 
   @override
   bool equals(UsersRecord? e1, UsersRecord? e2) {
-    const listEquality = ListEquality();
     return e1?.email == e2?.email &&
         e1?.displayName == e2?.displayName &&
         e1?.photoUrl == e2?.photoUrl &&
@@ -168,9 +155,7 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.firstName == e2?.firstName &&
         e1?.lastName == e2?.lastName &&
         e1?.isActive == e2?.isActive &&
-        e1?.isAdmin == e2?.isAdmin &&
-        listEquality.equals(e1?.children, e2?.children) &&
-        listEquality.equals(e1?.addresses, e2?.addresses);
+        e1?.isAdmin == e2?.isAdmin;
   }
 
   @override
@@ -184,9 +169,7 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.firstName,
         e?.lastName,
         e?.isActive,
-        e?.isAdmin,
-        e?.children,
-        e?.addresses
+        e?.isAdmin
       ]);
 
   @override

@@ -1,5 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -134,52 +132,14 @@ class _AddAddressWidgetState extends State<AddAddressWidget> {
                                     !_model.formKey.currentState!.validate()) {
                                   return;
                                 }
-
-                                var addressesRecordReference =
-                                    AddressesRecord.collection.doc();
-                                await addressesRecordReference
-                                    .set(createAddressesRecordData(
-                                  streetName:
-                                      _model.streetNameTextController.text,
-                                  streetNumber:
-                                      _model.streetNumberTextController.text,
-                                  city: _model.cityTextController.text,
-                                  state: _model.stateValue,
-                                  zipcode: _model.zipcodeTextController.text,
-                                  createdAt: getCurrentTimestamp,
-                                  defaultAddress: true,
-                                  archived: false,
-                                  parent: currentUserReference,
-                                ));
-                                _model.addrDocId =
-                                    AddressesRecord.getDocumentFromData(
-                                        createAddressesRecordData(
-                                          streetName: _model
-                                              .streetNameTextController.text,
-                                          streetNumber: _model
-                                              .streetNumberTextController.text,
-                                          city: _model.cityTextController.text,
-                                          state: _model.stateValue,
-                                          zipcode:
-                                              _model.zipcodeTextController.text,
-                                          createdAt: getCurrentTimestamp,
-                                          defaultAddress: true,
-                                          archived: false,
-                                          parent: currentUserReference,
-                                        ),
-                                        addressesRecordReference);
-
-                                await currentUserReference!.update({
-                                  ...mapToFirestore(
-                                    {
-                                      'addresses': FieldValue.arrayUnion(
-                                          [_model.addrDocId?.reference]),
-                                    },
-                                  ),
-                                });
+                                await actions.createParentAddress(
+                                  _model.streetNumberTextController.text,
+                                  _model.streetNameTextController.text,
+                                  _model.cityTextController.text,
+                                  _model.stateValue!,
+                                  _model.zipcodeTextController.text,
+                                );
                                 Navigator.pop(context);
-
-                                safeSetState(() {});
                               },
                               autofocus: false,
                               enabled: true,

@@ -425,10 +425,8 @@ class _LoginWidgetState extends State<LoginWidget>
                                       if (FFAppState().connected) {
                                         FFAppState().islogin = true;
                                         FFAppState().update(() {});
-                                        FFAppState().selectChildrenCheckbox =
-                                            [];
-                                        safeSetState(() {});
                                         await actions.loadParentAddress();
+                                        await actions.loadChildren();
 
                                         context.goNamedAuth(
                                             NavBarWidget.routeName,

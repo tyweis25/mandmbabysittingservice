@@ -10,6 +10,34 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-Future createChild() async {
-  // Add your function code here!
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future createChild(
+  String childName,
+  String childAge,
+  String childNotes,
+  List<String>? childLikes,
+) async {
+  try {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    final userRef =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    final childrenRef = userRef.collection('children');
+
+    await childrenRef.add({
+      'child_name': childName,
+      'child_age': childAge,
+      'child_notes': childNotes,
+      'child_likes': childLikes ?? [],
+      'parent': userRef,
+    });
+
+    await loadChildren();
+  } catch (e) {
+    debugPrint('Error creating child: $e');
+    rethrow;
+  }
 }
