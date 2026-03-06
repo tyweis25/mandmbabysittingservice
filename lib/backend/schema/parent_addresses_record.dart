@@ -45,11 +45,6 @@ class ParentAddressesRecord extends FirestoreRecord {
   String get streetName => _streetName ?? '';
   bool hasStreetName() => _streetName != null;
 
-  // "full_address" field.
-  String? _fullAddress;
-  String get fullAddress => _fullAddress ?? '';
-  bool hasFullAddress() => _fullAddress != null;
-
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -59,7 +54,6 @@ class ParentAddressesRecord extends FirestoreRecord {
     _parentRef = snapshotData['parentRef'] as DocumentReference?;
     _streetNumber = snapshotData['streetNumber'] as String?;
     _streetName = snapshotData['streetName'] as String?;
-    _fullAddress = snapshotData['full_address'] as String?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -108,7 +102,6 @@ Map<String, dynamic> createParentAddressesRecordData({
   DocumentReference? parentRef,
   String? streetNumber,
   String? streetName,
-  String? fullAddress,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -118,7 +111,6 @@ Map<String, dynamic> createParentAddressesRecordData({
       'parentRef': parentRef,
       'streetNumber': streetNumber,
       'streetName': streetName,
-      'full_address': fullAddress,
     }.withoutNulls,
   );
 
@@ -136,8 +128,7 @@ class ParentAddressesRecordDocumentEquality
         e1?.zipcode == e2?.zipcode &&
         e1?.parentRef == e2?.parentRef &&
         e1?.streetNumber == e2?.streetNumber &&
-        e1?.streetName == e2?.streetName &&
-        e1?.fullAddress == e2?.fullAddress;
+        e1?.streetName == e2?.streetName;
   }
 
   @override
@@ -147,8 +138,7 @@ class ParentAddressesRecordDocumentEquality
         e?.zipcode,
         e?.parentRef,
         e?.streetNumber,
-        e?.streetName,
-        e?.fullAddress
+        e?.streetName
       ]);
 
   @override

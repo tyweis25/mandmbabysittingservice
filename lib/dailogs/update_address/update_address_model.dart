@@ -1,0 +1,47 @@
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/form_field_controller.dart';
+import 'update_address_widget.dart' show UpdateAddressWidget;
+import 'package:flutter/material.dart';
+
+class UpdateAddressModel extends FlutterFlowModel<UpdateAddressWidget> {
+  ///  State fields for stateful widgets in this component.
+
+  final formKey = GlobalKey<FormState>();
+  // State field(s) for StreetNumber widget.
+  FocusNode? streetNumberFocusNode;
+  TextEditingController? streetNumberTextController;
+  String? Function(BuildContext, String?)? streetNumberTextControllerValidator;
+  // State field(s) for StreetName widget.
+  FocusNode? streetNameFocusNode;
+  TextEditingController? streetNameTextController;
+  String? Function(BuildContext, String?)? streetNameTextControllerValidator;
+  // State field(s) for City widget.
+  FocusNode? cityFocusNode;
+  TextEditingController? cityTextController;
+  String? Function(BuildContext, String?)? cityTextControllerValidator;
+  // State field(s) for State widget.
+  String? stateValue;
+  FormFieldController<String>? stateValueController;
+  // State field(s) for Zipcode widget.
+  FocusNode? zipcodeFocusNode;
+  TextEditingController? zipcodeTextController;
+  String? Function(BuildContext, String?)? zipcodeTextControllerValidator;
+
+  @override
+  void initState(BuildContext context) {}
+
+  @override
+  void dispose() {
+    streetNumberFocusNode?.dispose();
+    streetNumberTextController?.dispose();
+
+    streetNameFocusNode?.dispose();
+    streetNameTextController?.dispose();
+
+    cityFocusNode?.dispose();
+    cityTextController?.dispose();
+
+    zipcodeFocusNode?.dispose();
+    zipcodeTextController?.dispose();
+  }
+}
